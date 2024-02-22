@@ -30,13 +30,13 @@ class AuthController extends Controller
         if (Auth::attempt(['email' => $user->email, 'password' => $request->password]) ||
             Auth::attempt(['username' => $user->username, 'password' => $request->password])) {
 
-            return $this->getTokenRefreshToken($user->email, $request->password);
+            $response = $this->getTokenRefreshToken($user->email, $request->password);
+            $response['user'] = $user;
+
+            return $response;
         } else {
             return response()->json(['error' => 'invalid credentials'], 401);
         }
-
-
-
     }
 
     /**
@@ -48,5 +48,13 @@ class AuthController extends Controller
         $refresh_token = $request->refresh_token;
 
         return $this->getRefreshToken($refresh_token);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function logged(): JsonResponse
+    {
+        return response()->json(Auth::user());
     }
 }

@@ -25,6 +25,8 @@ Route::prefix('oauth/v1.0')->group(function (){
         Route::post('refresh_token',[AuthController::class,'refresh_token']);
 
         Route::middleware(['auth:api'])->group(function (){
+            Route::get('logged', [AuthController::class,'logged']);
+
            Route::get('test',function (){
               return 'ok';
            });
