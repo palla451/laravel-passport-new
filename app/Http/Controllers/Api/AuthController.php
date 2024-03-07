@@ -39,16 +39,6 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function refresh_token(Request $request): array
-    {
-        $refresh_token = $request->refresh_token;
-
-        return $this->getRefreshToken($refresh_token);
-    }
 
     /**
      * @return JsonResponse
@@ -57,4 +47,45 @@ class AuthController extends Controller
     {
         return response()->json(Auth::user());
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function users():JsonResponse
+    {
+        $users = User::all();
+
+        return response()->json(['users'=>$users]);
+    }
+
+    public function logout(Request $request)
+    {
+        $accessToken = Auth::user()->token();
+
+        $accessToken->revoke();
+
+        return response()->json(['message' => 'Logout eseguito con successo']);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return array|mixed
+     */
+    public function refresh_token(Request $request)
+    {
+
+        $user = Auth::user();
+        $refresh_token = $request->refresh_token;
+
+
+
+        $result = $this->getRefreshToken($refresh_token);
+        $result['user'] = $user;
+        return $result;
+    }
+
+
+
+
 }
