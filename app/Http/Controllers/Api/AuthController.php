@@ -16,9 +16,9 @@ class AuthController extends Controller
 
     /**
      * @param Request $request
-     * @return array
+     * @return JsonResponse
      */
-    public function login(Request $request): array
+    public function login(Request $request): JsonResponse
     {
         $login = $request->input('email');
         $user = User::where('email', $login)->orWhere('username', $login)->first();
@@ -33,7 +33,7 @@ class AuthController extends Controller
             $response = $this->getTokenRefreshToken($user->email, $request->password);
             $response['user'] = $user;
 
-            return $response;
+            return response()->json($response);
         } else {
             return response()->json(['error' => 'invalid credentials'], 401);
         }
@@ -56,5 +56,17 @@ class AuthController extends Controller
     public function logged(): JsonResponse
     {
         return response()->json(Auth::user());
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
+    {
+        $user = Auth::user();
+        $user->tokens()->delete();
+        return response()->json([
+            'message' => 'Logout successfully'
+        ]);
     }
 }

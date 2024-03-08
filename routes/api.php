@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,8 @@ Route::prefix('oauth/v1.0')->group(function (){
 
         Route::middleware(['auth:api'])->group(function (){
             Route::get('logged', [AuthController::class,'logged']);
+            Route::get('logout', [AuthController::class,'logout']);
+            Route::get('users',[UserController::class, 'index']);
 
            Route::get('test',function (){
               return 'ok';
