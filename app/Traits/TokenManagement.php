@@ -30,10 +30,10 @@ trait TokenManagement
      * @param $refreshToken
      * @return mixed
      */
-    public function getRefreshToken($refreshToken): array
+    public function getRefreshToken($refreshToken)
     {
         $baseUrl = url('/');
-        $response = Http::post("{$baseUrl}/oauth/token", [
+      $response =  Http::post("{$baseUrl}/oauth/token", [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
             'client_id' => config('passport.password_grant_client.id'),
@@ -41,6 +41,13 @@ trait TokenManagement
             'scope' => '',
         ]);
 
-        return  json_decode($response->getBody(), true);
+
+        // Verifica la risposta dalla richiesta di aggiornamento del token
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            // Gestisci eventuali errori dalla richiesta di aggiornamento del token
+            return response()->json(['error' => 'Impossibile aggiornare il token'], $response->status());
+        }
     }
 }

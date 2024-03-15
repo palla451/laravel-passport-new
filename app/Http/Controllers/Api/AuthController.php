@@ -75,8 +75,7 @@ class AuthController extends Controller
     public function refresh_token(Request $request)
     {
         $refresh_token = $request->refresh_token;
-        $result = $this->getRefreshToken($refresh_token);
-        return $result;
+        return  $this->getRefreshToken($refresh_token);
     }
 
 
